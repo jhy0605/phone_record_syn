@@ -1,0 +1,42 @@
+{% extends "record_syn/base.html" %}
+
+{% block title %}注册 - 空号检测系统{% endblock %}
+
+{% block content %}
+  <div class="auth-container">
+    <h2>注册</h2>
+    <form method="post">
+      {% csrf_token %}
+      <!-- 姓氏字段 -->
+      <div class="form-group">
+        <label for="last_name">姓氏</label>
+        <input type="text" id="last_name" name="last_name" class="form-control" required>
+      </div>
+      <!-- 名字字段 -->
+      <div class="form-group">
+        <label for="first_name">名字</label>
+        <input type="text" id="first_name" name="first_name" class="form-control" required>
+      </div>
+      <!-- 用户名字段 -->
+      <div class="form-group">
+        <label for="username">用户名</label>
+        <input type="text" id="username" name="username" class="form-control" required>
+      </div>
+      <!-- 密码字段 -->
+      <div class="form-group">
+        <label for="password1">密码</label>
+        <input type="password" id="password1" name="password1" class="form-control" required>
+      </div>
+      <!-- 确认密码字段 -->
+      <div class="form-group">
+        <label for="password2">确认密码</label>
+        <input type="password" id="password2" name="password2" class="form-control" required>
+      </div>
+      <!-- 提交按钮 -->
+      <button type="submit" class="btn btn-primary">注册</button>
+    </form>
+    <p class="register-link">已有账号？<a href="{% url 'login' %}">立即登录</a></p>
+  </div>
+{% endblock %}
+
+

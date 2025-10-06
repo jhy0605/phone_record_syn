@@ -1,0 +1,62 @@
+{% extends "record_syn/base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h2 class="mb-4">添加备份设备</h2>
+        <form method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <div class="row g-3">
+                <!-- 基础信息 -->
+                <div class="col-md-6">
+                    <label for="{{ form.ip_address.id_for_label }}" class="form-label">IP地址</label>
+                    {{ form.ip_address }}
+                    <div class="invalid-feedback">请输入有效的IP地址</div>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="{{ form.department.id_for_label }}" class="form-label">部门</label>
+                    {{ form.department }}
+                </div>
+
+                <!-- SMB认证 -->
+                <div class="col-md-6">
+                    <label for="{{ form.smb_username.id_for_label }}" class="form-label">SMB用户名</label>
+                    {{ form.smb_username }}
+                </div>
+
+                <div class="col-md-6">
+                    <label for="{{ form.smb_password.id_for_label }}" class="form-label">SMB密码</label>
+                    {{ form.smb_password }}
+                </div>
+
+                <!-- 路径配置 -->
+                <div class="col-md-6">
+                    <label for="{{ form.remote_path.id_for_label }}" class="form-label">远程共享路径</label>
+                    {{ form.remote_path }}
+                    <small class="form-text text-muted">格式：共享文件夹\子目录</small>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="{{ form.local_path.id_for_label }}" class="form-label">本地备份路径</label>
+                    {{ form.local_path }}
+                    <small class="form-text text-muted">格式：D:\backup\recordings</small>
+                </div>
+
+                <!-- 备注 -->
+                <div class="col-md-6">
+                    <label for="{{ form.remarks.id_for_label }}" class="form-label">备注</label>
+                    {{ form.remarks }}
+                    <small class="form-text text-muted">可选填写</small>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="col-12">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary me-md-2">保存</button>
+                        <a href="{% url 'device_list' %}" class="btn btn-secondary">取消</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

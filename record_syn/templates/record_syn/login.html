@@ -1,0 +1,41 @@
+{% extends "record_syn/base.html" %}
+
+{% block title %}登录 - 空号检测系统{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <h2>登录</h2>
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            用户名或密码不正确
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+
+        <!-- 保持原有输入框样式 -->
+        <div class="form-group">
+            <label for="id_username">用户名</label>
+            <input type="text" name="username" id="id_username" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="id_password">密码</label>
+            <input type="password" name="password" id="id_password" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">登录</button>
+    </form>
+</div>
+
+<!-- 添加简单样式确保错误提示不影响布局 -->
+<style>
+.alert-danger {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 4px;
+}
+</style>
+{% endblock %}

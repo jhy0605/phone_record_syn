@@ -1,0 +1,92 @@
+{% extends 'record_syn/base.html' %}
+
+{% block title %}检测结果查询 - 空号检测系统{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-4">检测结果查询</h1>
+
+    <!-- 搜索和上传区域 -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- 上传按钮 -->
+                <div>
+                </div>
+
+                <!-- 联合搜索表单 -->
+                <div>
+                    <form method="get" action="{% if task_id %}{% url 'result_list_with_task' task_id %}{% else %}{% url 'result_list' %}{% endif %}" class="d-flex align-items-center">
+                        <!-- 任务名称搜索框 -->
+                        <input type="text" name="task_name" class="form-control custom-input me-2" placeholder="搜索任务名称" value="{{ request.GET.task_name }}">
+
+                        <!-- 手机号码搜索框 -->
+                        <input type="text" name="phone_number" class="form-control custom-input me-2" placeholder="搜索手机号码" value="{{ request.GET.phone_number }}">
+
+                        <!-- 开始时间 -->
+                        <input type="date" name="start_date" class="form-control custom-input me-2" placeholder="开始时间" value="{{ request.GET.start_date|default:today|date:'Y-m-d' }}">
+
+                        <!-- 结束时间 -->
+                        <input type="date" name="end_date" class="form-control custom-input me-2" placeholder="结束时间" value="{{ request.GET.end_date|default:today|date:'Y-m-d' }}">
+
+                        <!-- 搜索按钮 -->
+                        <button type="submit" class="btn btn-primary custom-btn me-2">搜索</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 检测结果列表 -->
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>任务名称</th>
+                <th>手机号码</th>
+                <th>检测结果</th>
+                <th>结果描述</th>
+                <th>归属地</th>
+                <th>渠道</th>
+                <th>检测时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in page_obj %}
+            <tr>
+                <td>{{ result.task.name }}</td>
+                <td>{{ result.phone_number }}</td>
+                <td>{{ result.get_result_display }}</td>
+                <td>{{ result.result_msg }}</td>
+                <td>{{ result.area }}</td>
+                <td>{{ result.channel }}</td>
+                <td>{{ result.detected_at|date:"Y-m-d H:i:s" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- 分页导航 -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1{% if request.GET.task_name %}&task_name={{ request.GET.task_name }}{% endif %}{% if request.GET.phone_number %}&phone_number={{ request.GET.phone_number }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}">&laquo; 第一页</a>
+                <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.task_name %}&task_name={{ request.GET.task_name }}{% endif %}{% if request.GET.phone_number %}&phone_number={{ request.GET.phone_number }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}">上一页</a>
+            {% endif %}
+
+            <span class="current">
+                第 {{ page_obj.number }} 页，共 {{ page_obj.paginator.num_pages }} 页
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.task_name %}&task_name={{ request.GET.task_name }}{% endif %}{% if request.GET.phone_number %}&phone_number={{ request.GET.phone_number }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}">下一页</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.task_name %}&task_name={{ request.GET.task_name }}{% endif %}{% if request.GET.phone_number %}&phone_number={{ request.GET.phone_number }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}">最后一页 &raquo;</a>
+            {% endif %}
+            <!-- 新增：显示总任务数量 -->
+            <span class="current ms-3">
+                共 {{ page_obj.paginator.count }} 条
+            </span>
+
+        </span>
+    </div>
+</div>
+{% endblock %}
