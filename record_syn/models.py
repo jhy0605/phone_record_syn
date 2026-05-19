@@ -109,7 +109,8 @@ class SyncLog(models.Model):
     )
     timestamp = models.DateTimeField(
         auto_now_add=True,
-        verbose_name='时间戳'
+        verbose_name='时间戳',
+        db_index=True  # 添加索引，优化按时间查询性能
     )
     log_type = models.CharField(
         max_length=10,
@@ -128,6 +129,11 @@ class SyncLog(models.Model):
         verbose_name = '同步日志'
         verbose_name_plural = '同步日志'
         ordering = ['-timestamp']
+        indexes = [
+            models.Index(fields=['-timestamp'], name='synclog_timestamp_idx'),
+            models.Index(fields=['device', '-timestamp'], name='synclog_device_timestamp_idx'),
+            models.Index(fields=['log_type', '-timestamp'], name='synclog_type_timestamp_idx'),
+        ]
 
     def __str__(self):
         return f"[{self.get_log_type_display()}] {self.timestamp}: {self.message[:50]}"

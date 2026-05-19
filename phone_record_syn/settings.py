@@ -24,7 +24,12 @@ SECRET_KEY = 'django-insecure-720q955sk!e2^&30^xey=c0z2fzcs8rm0xspe+(7fr(t7#v!=5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.45.51']
+ALLOWED_HOSTS = [
+    '192.168.45.51',    # 原服务器 IP
+    '10.10.100.83',     # 当前服务器 IP
+    'localhost',        # 本地访问
+    '127.0.0.1',        # 本地回环
+]
 
 # Application definition
 
@@ -153,15 +158,35 @@ CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {asctime} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'console': {
-            'level': 'INFO',  # 可根据需要调整级别
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'sync.log'),
+            'maxBytes': 1024 * 1024,  # 1MB
+            'backupCount': 3,  # 保留3个备份文件
+            'formatter': 'verbose',
+            'encoding': 'utf-8',
         },
     },
     'loggers': {
         'record_syn.services': {
-            'handlers': ['console'],  # 只保留控制台输出
+            'handlers': ['console', 'file'],
             'level': 'INFO',
             'propagate': True,
         },

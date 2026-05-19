@@ -42,8 +42,8 @@ def sync_device_files(device_id):
         "passwd": "Admin@1234", }
     add_credentials([disk_a])
 
-    # 同步文件
-    file_count = copy_file(device.remote_path, device.local_path, device)
+    # 同步文件（使用 8 线程并行）
+    file_count = copy_file(device.remote_path, device.local_path, device, max_workers=8)
     if file_count > 0:
         # 创建同步记录（记录开始时间）
         sync_record = SyncRecord.objects.create(
